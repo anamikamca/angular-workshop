@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html ng-app="myModule">
+<head>
+  <script src="angular.js"></script>
+  <script src="script.js"></script>
+  <style>
+  .arrow-up{
+	  width:0;
+	  height:0;
+	  border-bottom : 10px solid black;
+	  border-left : 5px solid transparent;
+	  border-right : 5px solid transparent;
+
+  }
+  .arrow-down{
+	  width:0;
+	  height:0;
+	  border-top : 10px solid black;
+	  border-left : 5px solid transparent;
+	  border-right : 5px solid transparent;
+
+  }
+  </style>
+</head>
+
+<body>
+  <div ng-controller="myController">
+   <fieldset>
+    <strong>First name:</strong> {{ employee.firstName }}<br />
+    <strong>Last name:</strong> {{ employee.lastName }}<br />
+    <strong>Gender:</strong> {{ employee.gender }}<br />
+    <strong>Profile Pic:</strong> <img ng-src="{{ employee.profilepic }}" alt="{{ employee.firstName }}" style="width:100px;height:100px;" ><br />
+	<input type="text" ng-model="employee.firstName">  
+	 </fieldset>
+  </div>
+   <div ng-controller="secondController">
+   <fieldset>
+   Rows To display: <input type="number"  min=1 max=2 step=1 ng-model="rowlimit">
+   Sort Column :<select ng-model= "sortcolumn">
+				<option value="name">Name</option>
+				<option value="gender">Gender</option>
+				<option value="-salary">Salary</option>
+				</select>
+				Search: <input type="text" ng-model="searchText" placeholder="Search In Grid">
+				<input type="checkbox" ng-model="exactMatch" /> Exact match
+				<br>
+				<br />
+				<input type="checkbox" ng-model="hideSalary" /> hide salary
+
+				</fieldset>
+				<fieldset>
+				    <table>
+		<tr>
+			<th ng-click='sortData("firstName")'>firstName
+			<div ng-class="getSortClass('firstName')"></div>
+			</th>
+			<th ng-click='sortData("lastName")'>lastName <div ng-class="getSortClass('lastName')"></div></th>
+			<th ng-click='sortData("gender")'>gender <div ng-class="getSortClass('gender')"></div></th>
+			<th >pic</th>
+			<th>Like/Dislike Count</th>
+			<th>dateofbirth</th>
+			<th ng-click='sortData("salary")'>salary(number) <div ng-class="getSortClass('salary')"></div></th>
+			<th ng-hide="hideSalary">salary(currency)</th>
+			<th ng-show="hideSalary">salary(currency)</th>
+			<th>Age</th>
+			<th>Like/Dislike Button</th>
+		</tr>
+	<thead>
+	<tbody>
+		<tr  ng-repeat="employee in employees | limitTo:rowlimit | orderBy:sortcolumn:reverseSort |filter:searchText:exactMatch">
+			<td>{{ employee.firstName | uppercase}}</td>
+			<td>{{ employee.lastName }}</td>
+			<td>{{ employee.gender |lowercase}}</td>
+			<td><img ng-src="{{ employee.profilepic }}" alt="{{ employee.firstName }}" style="width:100px;height:100px;" ></td>
+			<td>{{ employee.like }}/{{ employee.dislike }}</td>
+			<td>{{ employee.dateofbirth | date:"dd/MM/yyyy"}}</td>
+			<td>{{ employee.salary |number:2 }}</td>
+			<td ng-hide="hideSalary">{{ employee.salary |currency :"£":1}}</td>
+			<th ng-show="hideSalary">######</th>
+
+			<td>{{ employee.age | age }}</td>
+			<td><input type="button" value="Like" ng-click="likebutton(employee)"><input type="button" value="Dislike"  ng-click="dislikebutton(employee)"></td>
+		</tr>
+	</tbody>
+	</table>	
+	
+				</fieldset>
+	 <fieldset>
+	<ul>
+		<li ng-repeat = 'country in countries' ng-init="parentindex=$index">
+			{{ country.name}} - Index = {{ $index}}
+			<ul>
+				<li ng-repeat = 'city in country.cities'>
+					{{city.name}} - Parent Index -{{ $parent.$index}}/{{ parentindex}} - Index = {{ $index}}
+					</li>
+			</ul>
+		</li>
+	</ul>
+		 </fieldset>
+  </div>
+</body>
+</html>
